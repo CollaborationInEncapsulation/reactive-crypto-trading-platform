@@ -1,0 +1,80 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "amd": false,
+    "mocha": true,
+    "jasmine": false,
+    "phantomjs": false,
+    "jquery": false,
+    "prototypejs": false,
+    "shelljs": false
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "binaryLiterals": true,
+      "blockBindings": true,
+      "classes": true,
+      "defaultParams": true,
+      "destructuring": true,
+      "forOf": true,
+      "generators": true,
+      "modules": true,
+      "objectLiteralComputedProperties": true,
+      "objectLiteralDuplicateProperties": false,
+      "objectLiteralShorthandMethods": true,
+      "objectLiteralShorthandProperties": true,
+      "octalLiterals": false,
+      "regexUFlag": false,
+      "regexYFlag": false,
+      "restParams": true,
+      "spread": true,
+      "templateStrings": true,
+      "unicodeCodePointEscapes": false,
+      "jsx": true
+    }
+  },
+  "extends": [
+    "airbnb",
+    "plugin:react/recommended",
+    "plugin:jsx-control-statements/recommended",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "plugins": [
+    "react",
+    "jsx-control-statements"
+  ],
+  "rules": {
+    "import/no-extraneous-dependencies": 0,
+    "arrow-parens": [2, "as-needed", { "requireForBlockBody": true }],
+    "comma-dangle": 0,
+    "jsx-quotes": [1, "prefer-single"],
+    "no-plusplus": 0,
+    "no-underscore-dangle": 0,
+    "react/forbid-prop-types": 0,
+    "class-methods-use-this": 0,
+    "jsx-use-if-tag": 0,
+    "react/no-array-index-key": 0,
+    "jsx-control-statements/jsx-use-if-tag": 0,
+    "react/require-default-props": 0,
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "jsx-a11y/label-has-for": [ 2, {
+      "required": {
+        "every": [ "id" ]
+      },
+      "allowChildren": false
+    }],
+    "object-curly-newline": ["error", {
+      "ObjectExpression": "always",
+      "ObjectPattern": { "multiline": false, "consistent": false, "minProperties": 0 }
+    }]
+  }
+}

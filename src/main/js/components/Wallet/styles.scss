@@ -1,0 +1,30 @@
+.wallet {
+  background: #F2F2F2;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+  border-radius: 3px;
+  margin-bottom: 30px;
+  h5 {
+    padding: 10px;
+    margin: 0;
+  }
+
+  &__table {
+    // background: #000;
+    width: 100%;
+    tr {
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+    }
+
+    &-text {
+      font-size: 18px;
+      font-weight: 400;
+    }
+    &-icon {
+      font-size: 50px;
+    }
+  }
+
+}
