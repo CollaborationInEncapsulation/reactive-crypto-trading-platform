@@ -1,0 +1,20 @@
+// @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,600';
+
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+html {
+  background-color: #e7ebf0;
+  color: #222;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  & > div {
+    min-height: 100%;
+  }
+}

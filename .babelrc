@@ -1,0 +1,18 @@
+{
+  "presets": [
+    ["es2015", { "modules": false }],
+    "react",
+    "stage-3"
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    "syntax-dynamic-import",
+    "transform-class-properties",
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }]
+  ]
+}
