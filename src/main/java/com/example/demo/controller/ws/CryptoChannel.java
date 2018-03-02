@@ -3,6 +3,7 @@ package com.example.demo.controller.ws;
 import java.util.List;
 
 import com.example.demo.service.CryptoService;
+import com.example.demo.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,6 +21,7 @@ public class CryptoChannel implements WebSocketHandler {
 
 	private final WebSocketMessageMapper mapper;
 	private final List<CryptoService>    cryptoServices;
+	private final WalletService          walletService;
 
 	@Override
 	public Mono<Void> handle(WebSocketSession session) {
@@ -36,7 +38,10 @@ public class CryptoChannel implements WebSocketHandler {
 	}
 
 	private Flux<?> doHandle(Flux<Message<Message.Trade>> inbound) {
-		return Flux.fromIterable(cryptoServices)
-		           .flatMap(CryptoService::stream);
+		return Flux.merge(
+				walletService.stateStream(),
+				Flux.fromIterable(cryptoServices)
+				    .flatMap(CryptoService::stream)
+		);
 	}
 }
