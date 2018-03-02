@@ -1,6 +1,7 @@
 package com.example.demo.service.bitmex;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.logging.Level;
 
 import com.example.demo.controller.ws.Message;
@@ -31,6 +32,8 @@ public class BitmexCryptoService implements CryptoService {
 						new BitmexWebSocketHandler(sink)
 				)
 				.log("Connected TO Bitmex", Level.INFO, SignalType.ON_SUBSCRIBE)
+				.retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+				                 .delayElements(Duration.ofMillis(200)))
 				.subscribe();
 	}
 }

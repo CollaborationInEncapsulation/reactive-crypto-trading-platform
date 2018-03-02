@@ -1,6 +1,7 @@
 package com.example.demo.service.local;
 
 import java.security.Principal;
+import java.time.Duration;
 
 import com.example.demo.domain.Wallet;
 import com.example.demo.repository.WalletRepository;
@@ -29,6 +30,9 @@ public class LocalWalletService implements WalletService {
 	public Flux<Message<Float>> stateStream() {
 		return currentUser()
 				.flatMapMany(walletRepository::findAllByOwner)
+				.timeout(Duration.ofSeconds(2))
+				.retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+				                 .delayElements(Duration.ofMillis(200)))
 				.mergeWith(stream)
 				.map(LocalMessageMapper::walletToMessage);
 	}
@@ -42,6 +46,9 @@ public class LocalWalletService implements WalletService {
 				))
 				.map(wallets -> wallets.withdraw(calculateWithdraw(trade)))
 				.flatMap(walletRepository::save)
+				.timeout(Duration.ofSeconds(2))
+				.retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+				                 .delayElements(Duration.ofMillis(200)))
 				.doOnNext(stream.sink()::next)
 				.then();
 	}
@@ -55,6 +62,9 @@ public class LocalWalletService implements WalletService {
 				))
 				.map(wallets -> wallets.adjust(calculateAdjust(trade)))
 				.flatMap(walletRepository::save)
+				.timeout(Duration.ofSeconds(2))
+				.retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+				                 .delayElements(Duration.ofMillis(200)))
 				.doOnNext(stream.sink()::next)
 				.then();
 	}
@@ -68,6 +78,9 @@ public class LocalWalletService implements WalletService {
 				))
 				.map(wallets -> wallets.adjust(calculateWithdraw(trade)))
 				.flatMap(walletRepository::save)
+				.timeout(Duration.ofSeconds(2))
+				.retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+				                 .delayElements(Duration.ofMillis(200)))
 				.doOnNext(stream.sink()::next)
 				.then();
 	}

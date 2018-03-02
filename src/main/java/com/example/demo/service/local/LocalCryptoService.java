@@ -62,6 +62,9 @@ public class LocalCryptoService implements CryptoService {
 
 	private Mono<Trade> doStoreTrade(Message<Message.Trade> tradeMessage) {
 		return tradesRepository.save(LocalMessageMapper.messageToTrade(tradeMessage))
+		                       .timeout(Duration.ofSeconds(2))
+		                       .retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+		                                        .delayElements(Duration.ofMillis(200)))
 		                       .publishOn(Schedulers.parallel());
 	}
 }

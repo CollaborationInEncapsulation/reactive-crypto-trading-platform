@@ -43,9 +43,11 @@ public class CryptoChannel implements WebSocketHandler {
 		WalletService walletService = beanFactory.createBean(LocalWalletService.class);
 
 		return Flux.merge(
-			walletService.stateStream(),
+			walletService.stateStream()
+			             .onErrorResume(t -> Mono.empty()),
 			Flux.fromIterable(cryptoServices)
-		        .flatMap(cs -> cs.trade(inbound, walletService)),
+		        .flatMap(cs -> cs.trade(inbound, walletService)
+		                         .onErrorResume(t -> Mono.empty())),
 			Flux.fromIterable(cryptoServices)
 			    .flatMap(CryptoService::stream)
 		)

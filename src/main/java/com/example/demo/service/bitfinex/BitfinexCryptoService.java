@@ -1,6 +1,7 @@
 package com.example.demo.service.bitfinex;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.logging.Level;
 
 import com.example.demo.controller.ws.Message;
@@ -24,6 +25,8 @@ public class BitfinexCryptoService implements CryptoService {
 						new BitfinexWebSocketHandler(stream.sink())
 				)
 				.log("Connected TO Bitfinex", Level.INFO, SignalType.ON_SUBSCRIBE)
+				.retryWhen(e -> e.zipWith(Flux.range(0,  Integer.MAX_VALUE))
+				                 .delayElements(Duration.ofMillis(200)))
 				.subscribe();
 	}
 
