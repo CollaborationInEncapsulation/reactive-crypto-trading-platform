@@ -41,6 +41,8 @@ public class CryptoChannel implements WebSocketHandler {
 		return Flux.merge(
 				walletService.stateStream(),
 				Flux.fromIterable(cryptoServices)
+		           .flatMap(cs -> cs.trade(inbound)),
+				Flux.fromIterable(cryptoServices)
 				    .flatMap(CryptoService::stream)
 		);
 	}

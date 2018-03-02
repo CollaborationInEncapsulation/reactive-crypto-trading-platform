@@ -28,6 +28,30 @@ public class Wallet {
 	@Setter(value = AccessLevel.NONE) String currency;
 	@Setter(value = AccessLevel.NONE) float  balance;
 
+	public Wallet withdraw(float amount) {
+		float nextBalance = balance - amount;
+
+		if (nextBalance >= 0) {
+			return Wallet.builder()
+			             .id(id)
+			             .owner(owner)
+			             .currency(currency)
+			             .balance(nextBalance)
+			             .build();
+		}
+
+		throw new NotEnoughMoneyException();
+	}
+
+	public Wallet adjust(float amount) {
+		return Wallet.builder()
+		             .id(id)
+		             .owner(owner)
+		             .currency(currency)
+		             .balance(balance + amount)
+		             .build();
+	}
+
 	public static Wallet create(String owner, String currency) {
 		return Wallet.builder()
 		             .balance(10)
@@ -35,4 +59,6 @@ public class Wallet {
 		             .currency(currency)
 		             .build();
 	}
+
+	public static class NotEnoughMoneyException extends IllegalStateException { }
 }
