@@ -28,7 +28,6 @@ public class LocalCryptoService implements CryptoService {
 
 	private final DirectProcessor<Message<?>> stream = DirectProcessor.create();
 	private final TradesRepository            tradesRepository;
-	private final WalletService               walletService;
 
 	@Override
 	public Flux<Message<?>> stream() {
@@ -37,7 +36,7 @@ public class LocalCryptoService implements CryptoService {
 
 	@Override
 	@PreAuthorize("isAuthenticated()")
-	public Mono<Void> trade(Flux<Message<Message.Trade>> tradeOffer) {
+	public Mono<Void> trade(Flux<Message<Message.Trade>> tradeOffer, WalletService walletService) {
 		return tradeOffer
 				.onBackpressureBuffer()
 				.flatMap(trade ->

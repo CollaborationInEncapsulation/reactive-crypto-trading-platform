@@ -4,12 +4,14 @@ import java.util.List;
 
 import com.example.demo.service.CryptoService;
 import com.example.demo.service.WalletService;
+import com.example.demo.service.local.LocalWalletService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketMessage;
@@ -19,9 +21,9 @@ import org.springframework.web.reactive.socket.WebSocketSession;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CryptoChannel implements WebSocketHandler {
 
-	private final WebSocketMessageMapper mapper;
-	private final List<CryptoService>    cryptoServices;
-	private final WalletService          walletService;
+	final WebSocketMessageMapper          mapper;
+	final List<CryptoService>             cryptoServices;
+	final ConfigurableListableBeanFactory beanFactory;
 
 	@Override
 	public Mono<Void> handle(WebSocketSession session) {
@@ -38,12 +40,15 @@ public class CryptoChannel implements WebSocketHandler {
 	}
 
 	private Flux<?> doHandle(Flux<Message<Message.Trade>> inbound) {
+		WalletService walletService = beanFactory.createBean(LocalWalletService.class);
+
 		return Flux.merge(
-				walletService.stateStream(),
-				Flux.fromIterable(cryptoServices)
-		           .flatMap(cs -> cs.trade(inbound)),
-				Flux.fromIterable(cryptoServices)
-				    .flatMap(CryptoService::stream)
-		);
+			walletService.stateStream(),
+			Flux.fromIterable(cryptoServices)
+		        .flatMap(cs -> cs.trade(inbound, walletService)),
+			Flux.fromIterable(cryptoServices)
+			    .flatMap(CryptoService::stream)
+		)
+        .doOnTerminate(() -> beanFactory.destroyBean(walletService));
 	}
 }

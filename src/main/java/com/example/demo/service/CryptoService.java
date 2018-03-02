@@ -8,7 +8,7 @@ public interface CryptoService {
 
 	Flux<Message<?>> stream();
 
-	default Mono<Void> trade(Flux<Message<Message.Trade>> trades) {
+	default Mono<Void> trade(Flux<Message<Message.Trade>> trades, WalletService walletService) {
 		return Mono.empty();
 	}
 }
