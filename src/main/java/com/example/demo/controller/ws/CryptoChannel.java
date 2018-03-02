@@ -1,5 +1,8 @@
 package com.example.demo.controller.ws;
 
+import java.util.List;
+
+import com.example.demo.service.CryptoService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,6 +19,7 @@ import org.springframework.web.reactive.socket.WebSocketSession;
 public class CryptoChannel implements WebSocketHandler {
 
 	private final WebSocketMessageMapper mapper;
+	private final List<CryptoService>    cryptoServices;
 
 	@Override
 	public Mono<Void> handle(WebSocketSession session) {
@@ -32,6 +36,7 @@ public class CryptoChannel implements WebSocketHandler {
 	}
 
 	private Flux<?> doHandle(Flux<Message<Message.Trade>> inbound) {
-		return inbound;
+		return Flux.fromIterable(cryptoServices)
+		           .flatMap(CryptoService::stream);
 	}
 }
