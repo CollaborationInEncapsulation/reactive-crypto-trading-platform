@@ -1,0 +1,9 @@
+version: '2'
+services:
+  # MongoDB
+  crypto-platform-mongo:
+    hostname: crypto-platform-mongo
+    image: mongo:3.6.3
+    ports:
+      - 27017:27017
+    mem_limit: 512M
