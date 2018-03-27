@@ -2,19 +2,20 @@ package com.example.demo.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 @Configuration
-@EnableReactiveMethodSecurity
-public class SecurityConfiguration {
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
-	public MapReactiveUserDetailsService userDetailsService() {
+	public UserDetailsManager userDetailsService() {
 		UserDetails userAdmin = User.withDefaultPasswordEncoder()
 		                            .username("admin")
 		                            .password("admin")
@@ -25,16 +26,15 @@ public class SecurityConfiguration {
 		                            .password("user")
 		                            .roles("USER")
 		                            .build();
-		return new MapReactiveUserDetailsService(userAdmin, userUser);
+		return new InMemoryUserDetailsManager(userAdmin, userUser);
 	}
 
-	@Bean
-	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.authorizeExchange()
-				.anyExchange().permitAll()
+				.authorizeRequests()
+				.anyRequest().permitAll()
 				.and()
 				.formLogin();
-		return http.build();
 	}
 }

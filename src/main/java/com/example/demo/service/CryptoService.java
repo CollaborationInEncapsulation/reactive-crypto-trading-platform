@@ -1,15 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.controller.ws.Message;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 public interface CryptoService {
 
-	Flux<Message<?>> stream();
+	Callable<Void> subscribe(Consumer<Message<?>> subscriber);
 
-	default Mono<Void> trade(Flux<Message<Message.Trade>> trades, WalletService walletService) {
-		return Mono.empty();
+	default void trade(Message<Message.Trade> trade) {
 	}
 }
 

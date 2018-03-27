@@ -1,16 +1,15 @@
 package com.example.demo.repository;
 
 import com.example.demo.domain.Wallet;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+
 @Repository
-public interface WalletRepository extends ReactiveMongoRepository<Wallet, String> {
+public interface WalletRepository extends MongoRepository<Wallet, String> {
 
-	Flux<Wallet> findAllByOwner(String owner);
+	Collection<Wallet> findAllByOwner(String owner);
 
-	Mono<Wallet> findByOwnerAndCurrency(String owner, String currency);
+	Wallet findByOwnerAndCurrency(String owner, String currency);
 }
